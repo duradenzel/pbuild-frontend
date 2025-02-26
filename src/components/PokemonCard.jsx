@@ -42,7 +42,8 @@ function PokemonCard({ pokemon, onRemove }) {
     fetchDetails()
   }, [pokemon.name])
 
-  if (!details) return <div>Loading...</div>
+  if (!details)
+    return <div className="bg-gray-700 p-4 rounded-lg h-full flex items-center justify-center">Loading...</div>
 
   const primaryType = details.types[0].type.name
   const secondaryType = details.types[1]?.type.name
@@ -61,12 +62,12 @@ function PokemonCard({ pokemon, onRemove }) {
   })
 
   return (
-    <div className=" rounded-lg shadow-md overflow-hidden" style={cardStyle}>
-      <div className="relative">
+    <div id="wrap-pc"  className="w-full bg-gray-700 rounded-lg shadow-md overflow-hidden h-72 flex flex-col" style={cardStyle}>
+      <div className="relative flex-grow">
         <img
           src={details.sprites.other.showdown.front_default || "/placeholder.svg"}
           alt={details.name}
-          className="w-full h-48 object-contain"
+          className="w-full h-48 object-contain bg-gray-800"
         />
         <button
           onClick={() => onRemove(pokemon.name)}
@@ -75,9 +76,9 @@ function PokemonCard({ pokemon, onRemove }) {
           ×
         </button>
       </div>
-      <div className="p-4">
+      <div className="p-4 flex flex-col justify-between flex-grow">
         <h3 className="text-lg font-semibold capitalize mb-2">{details.name}</h3>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <span style={typeStyle(primaryType)}>{primaryType}</span>
           {secondaryType && <span style={typeStyle(secondaryType)}>{secondaryType}</span>}
         </div>
@@ -87,4 +88,3 @@ function PokemonCard({ pokemon, onRemove }) {
 }
 
 export default PokemonCard
-

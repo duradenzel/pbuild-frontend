@@ -47,11 +47,11 @@ function PokemonList({ onSelectPokemon }) {
     setIsDropdownOpen(false)
   }
 
-  if (isLoading) return <div>Loading Pokémon...</div>
-  if (error) return <div>Error: {error}</div>
+  if (isLoading) return <div className="text-center">Loading Pokémon...</div>
+  if (error) return <div className="text-center text-red-500">Error: {error}</div>
 
   return (
-    <div className=" p-6 w-1/2 m-auto rounded-lg shadow-md" ref={dropdownRef}>
+    <div className=" w-full bg-gray-800 p-6 rounded-lg shadow-md" ref={dropdownRef}>
       <h2 className="text-2xl font-semibold mb-4">Select a Pokémon</h2>
       <div className="relative">
         <input
@@ -63,15 +63,15 @@ function PokemonList({ onSelectPokemon }) {
             setIsDropdownOpen(true)
           }}
           onFocus={() => setIsDropdownOpen(true)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-gray-700 text-white"
         />
         {isDropdownOpen && (
-          <ul className="absolute z-10 w-full mt-1 max-h-60 bg-gray-800 overflow-y-auto  border rounded shadow-lg">
+          <ul className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-gray-700 border border-gray-600 rounded shadow-lg">
             {filteredPokemon.map((pokemon) => (
               <li
                 key={pokemon.name}
                 onClick={() => handlePokemonSelect(pokemon)}
-                className="p-2 cursor-pointer hover:bg-gray-100"
+                className="p-2 cursor-pointer hover:bg-gray-600 text-white"
               >
                 {pokemon.name}
               </li>
@@ -84,4 +84,5 @@ function PokemonList({ onSelectPokemon }) {
 }
 
 export default PokemonList
+
 
