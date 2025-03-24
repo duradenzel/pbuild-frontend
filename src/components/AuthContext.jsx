@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 "use client"
 
@@ -105,7 +104,7 @@ export function AuthProvider({ children }) {
   const saveTeam = async (teamName, team) => {
     try {
       const token = localStorage.getItem("token")
-      console.log("Token being sent:", token);
+      console.log("Token being sent:", token)
 
       const response = await fetch("http://localhost:5286/api/Team/save", {
         method: "POST",
@@ -123,6 +122,50 @@ export function AuthProvider({ children }) {
       return true
     } catch (error) {
       console.error("Save team error:", error)
+      return false
+    }
+  }
+
+  const updateTeam = async (teamId, teamName, team) => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`http://localhost:5286/api/Team/update/${teamId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ Id: teamId, Name: teamName, Pokemons: team }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update team")
+      }
+
+      return true
+    } catch (error) {
+      console.error("Update team error:", error)
+      return false
+    }
+  }
+
+  const deleteTeam = async (teamId) => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`http://localhost:5286/api/Team/delete/${teamId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete team")
+      }
+
+      return true
+    } catch (error) {
+      console.error("Delete team error:", error)
       return false
     }
   }
@@ -148,11 +191,25 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, getProfile, loading, saveTeam, loadTeams }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        getProfile,
+        loading,
+        saveTeam,
+        loadTeams,
+        updateTeam,
+        deleteTeam,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext)
 
