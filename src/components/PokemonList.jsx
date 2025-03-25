@@ -51,7 +51,7 @@ function PokemonList({ onSelectPokemon }) {
   if (error) return <div className="text-center text-red-500">Error: {error}</div>
 
   return (
-    <div className=" w-full bg-gray-800 p-6 rounded-lg shadow-md" ref={dropdownRef}>
+    <div className="h-full bg-gray-800 p-6 rounded-lg shadow-md" ref={dropdownRef}>
       <h2 className="text-2xl font-semibold mb-4">Select a Pokémon</h2>
       <div className="relative">
         <input
@@ -84,5 +84,4 @@ function PokemonList({ onSelectPokemon }) {
 }
 
 export default PokemonList
-
 

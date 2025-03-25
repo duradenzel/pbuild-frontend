@@ -2,6 +2,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import PokemonHeader from "./pokemon/PokemonHeader"
+import PokemonTabs from "./pokemon/PokemonTabs"
 
 const typeColors = {
   normal: "#A8A77A",
@@ -26,65 +28,96 @@ const typeColors = {
 
 function PokemonCard({ pokemon, onRemove }) {
   const [details, setDetails] = useState(null)
+  const [activeTab, setActiveTab] = useState("stats")
+  const [stats, setStats] = useState({})
+  const [moves, setMoves] = useState(["", "", "", ""])
+  const [heldItem, setHeldItem] = useState("")
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     const fetchDetails = async () => {
-      try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-        if (!response.ok) throw new Error("Failed to fetch Pokémon details")
-        const data = await response.json()
-        setDetails(data)
-      } catch (error) {
-        console.error("Error fetching Pokémon details:", error)
+      if (pokemon.sprites) {
+        // If pokemon already has details (from loaded team), use those
+        setDetails(pokemon)
+        initializeStats(pokemon)
+      } else {
+        try {
+          const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+          if (!response.ok) throw new Error("Failed to fetch Pokémon details")
+          const data = await response.json()
+          setDetails(data)
+          initializeStats(data)
+        } catch (error) {
+          console.error("Error fetching Pokémon details:", error)
+        }
       }
     }
 
     fetchDetails()
-  }, [pokemon.name])
+  }, [pokemon])
+
+  const initializeStats = (pokemonData) => {
+    const initialStats = {}
+    pokemonData.stats.forEach((stat) => {
+      initialStats[stat.stat.name] = stat.base_stat
+    })
+    setStats(initialStats)
+  }
+
+  const handleStatChange = (statName, value) => {
+    setStats((prevStats) => ({
+      ...prevStats,
+      [statName]: Number.parseInt(value, 10),
+    }))
+  }
+
+  const handleMoveChange = (index, value) => {
+    const newMoves = [...moves]
+    newMoves[index] = value
+    setMoves(newMoves)
+  }
+
+  const handleItemChange = (value) => {
+    setHeldItem(value)
+  }
 
   if (!details)
     return <div className="bg-gray-700 p-4 rounded-lg h-full flex items-center justify-center">Loading...</div>
 
   const primaryType = details.types[0].type.name
-  const secondaryType = details.types[1]?.type.name
-
   const cardStyle = {
-    backgroundColor: `${typeColors[primaryType]}33`, // 33 is for 20% opacity
+    backgroundColor: `${typeColors[primaryType]}33`,
   }
 
-  const typeStyle = (type) => ({
-    backgroundColor: typeColors[type],
-    color: "#fff",
-    padding: "0.25rem 0.5rem",
-    borderRadius: "0.25rem",
-    fontSize: "0.75rem",
-    fontWeight: "bold",
-  })
-
   return (
-    <div id="wrap-pc"  className="w-full bg-gray-700 rounded-lg shadow-md overflow-hidden h-72 flex flex-col" style={cardStyle}>
-      <div className="relative flex-grow">
-        <img
-          src={details.sprites.other.showdown.front_default || "/placeholder.svg"}
-          alt={details.name}
-          className="w-full h-48 object-contain bg-gray-800"
+    <div
+      className={`w-full bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 ${isExpanded ? "h-auto" : "h-48"}`}
+      style={cardStyle}
+    >
+      <PokemonHeader
+        details={details}
+        onRemove={() => onRemove(details.name)}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+        typeColors={typeColors}
+      />
+
+      {isExpanded && (
+        <PokemonTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          stats={stats}
+          baseStats={details.stats}
+          onStatChange={handleStatChange}
+          moves={moves}
+          onMoveChange={handleMoveChange}
+          item={heldItem}
+          onItemChange={handleItemChange}
         />
-        <button
-          onClick={() => onRemove(pokemon.name)}
-          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-        >
-          ×
-        </button>
-      </div>
-      <div className="p-4 flex flex-col justify-between flex-grow">
-        <h3 className="text-lg font-semibold capitalize mb-2">{details.name}</h3>
-        <div className="flex flex-wrap gap-2">
-          <span style={typeStyle(primaryType)}>{primaryType}</span>
-          {secondaryType && <span style={typeStyle(secondaryType)}>{secondaryType}</span>}
-        </div>
-      </div>
+      )}
     </div>
   )
 }
 
 export default PokemonCard
+

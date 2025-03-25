@@ -58,7 +58,6 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
   }
 
   const handleLoadTeam = async (teamId) => {
-    console.log("selected team id:" + teamId)
     try {
       const token = localStorage.getItem("token")
 
@@ -72,8 +71,6 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
         throw new Error("Failed to fetch team details")
       }
       const teamData = await response.json()
-
-      console.log("Team Data:", teamData)
 
       const loadedTeam = await Promise.all(
         teamData.pokemons.map(async (pokemon) => {
@@ -155,7 +152,7 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
   }
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-md w-full">
+    <div className="h-full bg-gray-800 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4">
         {editingTeam ? `Edit Team: ${editingTeam.name}` : "Team Management"}
       </h2>
@@ -170,9 +167,9 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
           />
           <button
             onClick={handleSaveTeam}
-            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded whitespace-nowrap"
           >
-            {editingTeam ? "Update Team" : "Save Team"}
+            {editingTeam ? "Update" : "Save"}
           </button>
           {editingTeam && (
             <button
@@ -189,37 +186,39 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
         >
           Load Teams
         </button>
-        {message && <p className="text-yellow-400">{message}</p>}
+        {message && <p className="text-yellow-400 text-sm">{message}</p>}
         {savedTeams.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-xl font-semibold mb-2">Saved Teams</h3>
-            <ul className="space-y-2">
-              {savedTeams.map((team) => (
-                <li key={team.id} className="flex justify-between items-center p-2 bg-gray-700 rounded">
-                  <span className="font-medium">{team.name}</span>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleLoadTeam(team.id)}
-                      className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-1 px-2 rounded text-sm"
-                    >
-                      Load
-                    </button>
-                    <button
-                      onClick={() => handleEditTeam(team)}
-                      className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded text-sm"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTeam(team.id, team.name)}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <div className="mt-2">
+            <h3 className="text-lg font-semibold mb-2">Saved Teams</h3>
+            <div className="max-h-24 overflow-y-scroll">
+              <ul className="space-y-2">
+                {savedTeams.map((team) => (
+                  <li key={team.id} className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="font-medium truncate max-w-[100px]">{team.name}</span>
+                    <div className="flex space-x-1">
+                      <button
+                        onClick={() => handleLoadTeam(team.id)}
+                        className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-1 px-2 rounded text-xs"
+                      >
+                        Load
+                      </button>
+                      <button
+                        onClick={() => handleEditTeam(team)}
+                        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded text-xs"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTeam(team.id, team.name)}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </div>
