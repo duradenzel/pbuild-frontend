@@ -37,7 +37,6 @@ function PokemonCard({ pokemon, onRemove }) {
   useEffect(() => {
     const fetchDetails = async () => {
       if (pokemon.sprites) {
-        // If pokemon already has details (from loaded team), use those
         setDetails(pokemon)
         initializeStats(pokemon)
       } else {

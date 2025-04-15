@@ -23,7 +23,6 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
 
     let success
     if (editingTeam) {
-      // Update existing team
       success = await updateTeam(editingTeam.id, teamName, currentTeam)
       if (success) {
         setMessage(`Team "${teamName}" updated successfully`)
@@ -32,7 +31,6 @@ function TeamManagement({ currentTeam, onLoadTeam }) {
         setMessage("Failed to update team")
       }
     } else {
-      // Create new team
       success = await saveTeam(teamName, currentTeam)
       if (success) {
         setMessage(`Team "${teamName}" saved successfully`)

@@ -8,10 +8,27 @@ import TeamManagement from "./TeamManagement"
 export default function Dashboard() {
   const [team, setTeam] = useState([])
 
-  const addToTeam = (pokemon) => {
-    if (team.length < 6 && !team.some((p) => p.name === pokemon.name)) {
-      setTeam([...team, pokemon])
+  const addToTeam = async (pokemon) => {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+    if (!response.ok) throw new Error("Failed to fetch Pokémon details")
+      const fetchedPokemon = await response.json()
+    console.log(fetchedPokemon)
+    
+    const modifiedPokemon = {
+      ...pokemon,
+      hp: fetchedPokemon.stats[0]?.base_stat,
+      attack: fetchedPokemon.stats[1]?.base_stat,
+      defense: fetchedPokemon.stats[2]?.base_stat,
+      sp_attack: fetchedPokemon.stats[3]?.base_stat,
+      sp_defense: fetchedPokemon.stats[4]?.base_stat,
+      speed: fetchedPokemon.stats[5]?.base_stat,
     }
+    console.log(modifiedPokemon)
+
+    if (team.length < 6 && !team.some((p) => p.name === pokemon.name)) {
+      setTeam([...team, modifiedPokemon])
+    }
+  
   }
 
   const removeFromTeam = (pokemonName) => {

@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-"use client"
 
 export default function MoveEditor({ moves, onMoveChange }) {
   return (

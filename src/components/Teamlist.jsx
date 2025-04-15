@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-"use client"
 import PokemonCard from "./PokemonCard"
 
 function TeamList({ team, onRemovePokemon }) {

@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-"use client"
 
 export default function PokemonHeader({ details, onRemove, isExpanded, setIsExpanded, typeColors }) {
   const primaryType = details.types[0].type.name
