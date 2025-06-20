@@ -7,6 +7,7 @@ import TeamManagement from "./TeamManagement"
 
 export default function Dashboard() {
   const [team, setTeam] = useState([])
+  console.log(team)
 
   const addToTeam = async (pokemon) => {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)

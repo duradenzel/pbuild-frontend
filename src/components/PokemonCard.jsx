@@ -92,6 +92,7 @@ function PokemonCard({ pokemon, onRemove }) {
     <div
       className={`w-full bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 ${isExpanded ? "h-auto" : "h-48"}`}
       style={cardStyle}
+      data-testid="pokemon-card"
     >
       <PokemonHeader
         details={details}

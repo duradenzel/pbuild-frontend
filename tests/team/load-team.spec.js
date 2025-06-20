@@ -15,7 +15,9 @@ test.describe('Team load flow', () => {
         await page.getByRole('button', { name: 'Load Teams' }).click();
         const teamListItem = page.locator('li', { hasText: teamName });
         await teamListItem.getByRole('button', { name: /load/i }).click();
-        await expect()
+        
+        const loadedCards = page.getByTestId('pokemon-card');
+        await expect(loadedCards).toHaveCount(2);
 
 
 
